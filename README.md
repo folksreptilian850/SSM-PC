@@ -5,6 +5,29 @@ This repository bundles the open-source implementation that accompanies the pape
 modules for grid-cell representation learning, bird's-eye-view (BEV) prediction,
 and (upcoming) shared spatial memory components.
 
+## Paper Overview
+
+Sharing and reconstructing a coherent map is notoriously challenging in partially observed, bandwidth-limited environments. The associated paper reframes cooperation as minimizing mutual predictive uncertainty: agents communicate only the bits that most reduce their partners' prediction error. The core ingredients are:
+
+- A grid-like metric scaffold that emerges from self-supervised motion forecasting and supports accurate self-localization.
+- Social place-cell (SPC) populations that encode teammates’ trajectories, enabling agents to reason about where peers are likely to be.
+- A hierarchical RL policy that decides *when* communication is worth the bandwidth, guided by an information-bottleneck objective.
+
+On the Memory-Maze benchmark this predictive-coding strategy remains robust even when the link budget is slashed from 128 to 4 bits per step (success rate drops gently from 73.5% to 64.4%), while a full-broadcast baseline collapses from 67.6% to 28.6%.
+
+![Overview of the predictive coding framework](image/method.png)
+
+*Figure 1. Predictive coding framework for shared spatial memory. Panel (a) depicts the cooperative navigation problem; panel (b) highlights the self-localization scaffold built from emergent grid codes; panel (c) summarizes the communication-aware decision loop that prioritizes uncertainty reduction.*
+
+<p align="center">
+  <img src="image/video 5.2a.png" alt="Early training: unstable path integration" width="22%">
+  <img src="image/video 5.2b.png" alt="Mid training: improving position estimates" width="22%">
+  <img src="image/video 5.2c.png" alt="Late training: refined grid structure" width="22%">
+  <img src="image/video 5.2d.png" alt="Converged model: stable trajectory prediction" width="22%">
+</p>
+
+*Figure 2. Emergence of grid-cell-like predictions across training. (a) Early checkpoints show diffuse, drifting trajectories. (b) Mid-training models begin to align the latent lattice with actual coordinates. (c) Near convergence the bottleneck units form a hexagonal code. (d) Mature models maintain tightly overlapped predicted and ground-truth paths, mirroring the accuracy gains reported in the paper.*
+
 
 ---
 
@@ -171,4 +194,3 @@ per the request so that the GitHub project documents future work clearly.
    trajectory comparison) using the provided commands.
 4. Train or reuse BEV predictor weights, then render BEV videos via
    `visualization_output.py`.
-
