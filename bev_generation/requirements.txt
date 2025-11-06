@@ -1,0 +1,9 @@
+# /bev_predictor/requirements.txt
+
+torch>=1.7.0
+tensorboard>=2.4.0
+tqdm>=4.50.0
+pillow>=8.0.0
+numpy>=1.19.0
+matplotlib>=3.3.0
+opencv-python>=4.5.0

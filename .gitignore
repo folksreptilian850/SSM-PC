@@ -1,0 +1,34 @@
+# Byte-compiled / cache
+__pycache__/
+*.py[cod]
+
+# Checkpoints and weights
+*.pt
+*.pth
+*.ckpt
+
+# Generated media
+*.mp4
+*.avi
+*.mov
+
+# Logs and training artifacts
+log_*/
+logs/
+*/log_train*/
+*/log_eval*/
+
+# Notebook checkpoints
+.ipynb_checkpoints/
+
+# Local datasets and outputs
+grid_cell/data/**
+!grid_cell/data/README.md
+grid_cell/demo-output*/
+grid_cell/tmp*/
+grid_cell/tmp_debug*/
+
+bev_generation/data/**
+!bev_generation/data/README.md
+bev_generation/visualization_output*/
+bev_generation/visualization_output_demo*/
