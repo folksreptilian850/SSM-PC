@@ -1,196 +1,181 @@
 # Shared Spatial Memory Through Predictive Coding
 
-This repository bundles the open-source implementation that accompanies the paper
-**"Shared Spatial Memory Through Predictive Coding"**.  The project integrates
-modules for grid-cell representation learning, bird's-eye-view (BEV) prediction,
-and (upcoming) shared spatial memory components.
+This repository provides the **official open-source implementation** of  
+**“Shared Spatial Memory Through Predictive Coding” (Fang et al., 2025)**.  
+The framework unifies **grid-cell-like spatial coding**, **predictive BEV reconstruction**,  
+and **communication-efficient shared spatial memory** under a single predictive-coding objective.  
+
+> **Paper:** [https://arxiv.org/abs/2511.04235](https://arxiv.org/abs/2511.04235)  
+> **Project Page:** [http://fangzr.github.io/SSM-PC/index.html](http://fangzr.github.io/SSM-PC/index.html)
+
+---
 
 ## Paper Overview
 
-Sharing and reconstructing a coherent map is notoriously challenging in partially observed, bandwidth-limited environments. The associated paper reframes cooperation as minimizing mutual predictive uncertainty: agents communicate only the bits that most reduce their partners' prediction error. The core ingredients are:
+Sharing and reconstructing a coherent map is notoriously challenging in partially observed, bandwidth-limited environments.  
+The associated paper reframes cooperation as **minimizing mutual predictive uncertainty**:  
+agents communicate only the bits that most reduce their partners' prediction error.
 
-- A grid-like metric scaffold that emerges from self-supervised motion forecasting and supports accurate self-localization.
-- Social place-cell (SPC) populations that encode teammates’ trajectories, enabling agents to reason about where peers are likely to be.
-- A hierarchical RL policy that decides *when* communication is worth the bandwidth, guided by an information-bottleneck objective.
+**Core ingredients:**
+- A **grid-cell-like metric scaffold** emerging from self-supervised motion forecasting, supporting accurate self-localization.  
+- **Social place-cell (SPC)** populations that encode teammates’ trajectories, enabling agents to infer partner locations.  
+- A **hierarchical RL policy (HRL-ICM)** that decides *when* to communicate, guided by an information-bottleneck objective.
 
-On the Memory-Maze benchmark this predictive-coding strategy remains robust even when the link budget is slashed from 128 to 4 bits per step (success rate drops gently from 73.5% to 64.4%), while a full-broadcast baseline collapses from 67.6% to 28.6%.
+On the Memory-Maze benchmark, this predictive-coding strategy maintains robustness even when link budget drops from  
+128 → 4 bits per step (success rate 73.5% → 64.4%), while a full-broadcast baseline collapses from 67.6% → 28.6%.
 
 ![Overview of the predictive coding framework](image/method.png)
 
-*Figure 1. Predictive coding framework for shared spatial memory. Panel (a) depicts the cooperative navigation problem; panel (b) highlights the self-localization scaffold built from emergent grid codes; panel (c) summarizes the communication-aware decision loop that prioritizes uncertainty reduction.*
+*Figure 1. Predictive coding framework for shared spatial memory.  
+(a) Cooperative navigation; (b) self-localization scaffold built from emergent grid codes;  
+(c) communication-aware decision loop guided by uncertainty reduction.*
 
 <p align="center">
-  <img src="image/video 5.2a.png" alt="Early training: unstable path integration" width="22%">
-  <img src="image/video 5.2b.png" alt="Mid training: improving position estimates" width="22%">
-  <img src="image/video 5.2c.png" alt="Late training: refined grid structure" width="22%">
-  <img src="image/video 5.2d.png" alt="Converged model: stable trajectory prediction" width="22%">
+  <img src="image/video 5.2a.png" width="22%">
+  <img src="image/video 5.2b.png" width="22%">
+  <img src="image/video 5.2c.png" width="22%">
+  <img src="image/video 5.2d.png" width="22%">
 </p>
 
-*Figure 2. Emergence of grid-cell-like predictions across training. (a) Early checkpoints show diffuse, drifting trajectories. (b) Mid-training models begin to align the latent lattice with actual coordinates. (c) Near convergence the bottleneck units form a hexagonal code. (d) Mature models maintain tightly overlapped predicted and ground-truth paths, mirroring the accuracy gains reported in the paper.*
-
+*Figure 2. Emergence of grid-cell-like predictions across training epochs.*
 
 ---
 
-## Repository Layout
+## 📂 Repository Layout
 
 ```
+
 SSM-PC/
-├── grid_cell/           # Grid-cell training, inference, and visualization
-├── bev_generation/      # BEV predictor training and visualization utilities
-├── TODO.md              # Pending modules slated for open-sourcing
+├── grid_cell/             # Grid-cell spatial metric learning
+├── bev_generation/        # Predictive BEV reconstruction
 ├── LICENSE
 └── README.md
-```
 
-The sections below summarize each released module and how to reproduce key
-results.  Additional modules requested by the author (SPC, maze data capture,
-SLAM reconstruction, MAPPO, and IB-based compression) remain TODOs and are
-tracked explicitly so future releases can extend the codebase without
-ambiguity.
+````
+
+Additional modules (SPC, spatial memory reconstruction, HRL-ICM, and IB-based communication)  
+are listed below for clarity and future open-sourcing.
 
 ---
 
-## Dataset Preparation
+## 1. Spatial Metric Learning (Grid-Cell Module)
 
-Both sub-projects expect datasets to be placed inside repository-local folders
-or supplied via environment variables that override the defaults.
-
-### Grid-Cell Module
-
-- Default location: `grid_cell/data/self-navigation-maze-frame-only/`
-- Override via env vars: set `GRID_DATA_ROOT` and optionally
-  `GRID_DATASET_PATTERN` (defaults to `D*_P*`).
-
-Each dataset folder should resemble `D123_P1/000000` containing
-`frame_info.json`, optionally sharded `frame_info_*.json` metadata, and image
-assets used by `SingleMazeDataset`.
-
-### BEV Module
-
-- Default location: `bev_generation/data/`
-- Override via env vars: set `BEV_DATA_ROOT` and optionally
-  `BEV_DATASET_PATTERN` (defaults to `D*`).
-
-A dataset directory holds `fps_views/`, `bev_views/`, metadata JSONs, and
-`env_config.json`.  The loader normalizes legacy and new formats so long as the
-required fields are present.
-
----
-
-## 1. Grid-Cell Module
-
-Located in `grid_cell/`, this module contains the training scripts, supporting
-models, evaluation tooling, and manuscript video reproduction pipelines.
+Located in `grid_cell/`, this module implements training, inference, and visualization of grid-cell-like representations.
 
 ### Key Scripts
-
-| Purpose | Command Skeleton |
-| --- | --- |
-| Train main model | `python train_grid_cells.py --gpus 0,1` (set `GRID_DATA_ROOT` first) |
-| Run gridness analysis | `python run_gridness_analysis.py` (interactive directory selection) |
-| Visualize grid cells | `python grid_cell_visualization.py --model_path <ckpt> [--split val]` |
-| Trajectory comparison figure | `python vis_cell.py --checkpoint <ckpt> --trajectory <traj_dir> --output comparison.png` |
-| Supplementary Video 5 | `python generate_video5.py --checkpoint_dirs <dir ...> --output_dir demo-output/video5` |
-| Trajectory comparison video | `python generate_traj_comparison_video.py --checkpoint_dir <dir> --trajectory_dir <traj> --epochs 0 5 50 150` |
+| Purpose | Command |
+|----------|----------|
+| Train main model | `python train_grid_cells.py --gpus 0,1` |
+| Run gridness analysis | `python run_gridness_analysis.py` |
+| Visualize grid cells | `python grid_cell_visualization.py --model_path <ckpt>` |
+| Generate training videos | `python generate_video5.py --checkpoint_dirs <dir ...> --output_dir demo-output/video5` |
 
 #### Training
+```bash
+python train_grid_cells.py --gpus 0,1
+````
 
-`train_grid_cells.py` exposes flags:
+Supports DDP multi-GPU training; outputs are stored under `grid_cell/log_train_grid_cells/`.
 
-- `--gpus`: comma-separated GPU IDs (defaults to `0`).
-- `--resume`: optional checkpoint to continue training.
-- `--disable_grid_loss`: remove grid regularization for ablation studies.
+#### Visualization
 
-The script automatically handles single- or multi-GPU training via DDP and will
-store run outputs beneath `grid_cell/log_train_grid_cells/`.
+Includes:
 
-#### Evaluation & Visualizations
+* Rate maps and grid alignment statistics
+* Trajectory comparison plots
+* Multi-epoch visualization videos
 
-- `grid_cell_visualization.py` renders rate maps and grid alignment statistics.
-- `generate_video5.py` composes the dual-panel supplementary video (heatmap
-  evolution + trajectories).  Specify one or more checkpoint directories (e.g.
-  `log_train_grid_cells/YYYYMMDD_HHMMSS/checkpoints`).
-- `generate_traj_comparison_video.py` compares multiple epochs side-by-side.
-- `vis_cell.py` generates a static comparison plot for a single trajectory.
-
-Each script accepts CLI options to change fonts, datasets, trajectory limits,
-and output destinations.  All hard-coded absolute paths from the original
-environment were removed; rely on CLI arguments or environment variables.
-
-### Requirements
-
-Install dependencies via:
+#### Requirements
 
 ```bash
 pip install -r grid_cell/requirements.txt
 ```
 
-This covers PyTorch, NumPy/SciPy, Matplotlib, and OpenCV (used when videos are
-rendered).
-
 ---
 
-## 2. BEV Generation Module
+## 2. Predictive BEV Reconstruction
 
-The `bev_generation/` directory contains the BEV predictor architecture,
-training harness, and visualization pipeline used to generate BEV trajectories
-from first-person views.
+Located in `bev_generation/`, this module learns to reconstruct a **bird’s-eye-view (BEV)** map from egocentric RGB frames
+via a Transformer-based visual predictive model.
 
 ### Key Scripts
 
-| Purpose | Command Skeleton |
-| --- | --- |
-| Train BEV predictor | `python train.py` (uses `Config`; override via env vars) |
-| Multi-GPU training | `python train_multi_gpu.py --config <cfg_json>` |
-| Train target detector | `python train_target_detector.py` |
-| Run inference + videos | `python visualization_output.py --bev_model <ckpt> --target_model <ckpt> --dataset <seq> --output_dir out --clean_output` |
-| Mapping / SLAM viz | `python run_visualization.py --dataset_path <seq> --model_path <bev_ckpt>` |
+| Purpose                                  | Command                                                                    |
+| ---------------------------------------- | -------------------------------------------------------------------------- |
+| Train BEV predictor                      | `python train.py`                                                          |
+| Multi-GPU training                       | `python train_multi_gpu.py --config <cfg_json>`                            |
+| Train target detector                    | `python train_target_detector.py`                                          |
+| Inference & video output                 | `python visualization_output.py --bev_model <ckpt> --target_model <ckpt>`  |
+| Spatial Memory Reconstruction (was SLAM) | `python run_visualization.py --dataset_path <seq> --model_path <bev_ckpt>` |
 
-`visualization_output.py` now exposes CLI flags instead of hard-coded paths and
-also honors environment variables (`BEV_MODEL_PATH`, `TARGET_MODEL_PATH`,
-`BEV_DATASET_PATH`, `BEV_OUTPUT_DIR`).
+This module supports environment variables (`BEV_MODEL_PATH`, `BEV_DATASET_PATH`, etc.) for flexible configuration.
 
-`run_visualization.py` provides an entry point for interactive BEV mapping or
-SLAM reconstruction videos (set `BEV_MODEL_PATH` or pass `--model_path`).
-
-`datasets/maze_dataset.py` includes a debug utility that can be launched with
-custom maze directories:
-
-```bash
-python datasets/maze_dataset.py \
-  --base_dir /path/to/D*/ \
-  --maze_ids 000004 000005 \
-  --num_frames 50 \
-  --save_dir debug/rotation
-```
-
-### Requirements
+#### Requirements
 
 ```bash
 pip install -r bev_generation/requirements.txt
 ```
 
-This adds Matplotlib and OpenCV to the original predictor requirements so the
-visualization pipeline works out of the box.
+---
+
+## 3. Shared Spatial Memory & HRL-ICM (Planned)
+
+### Planned Features
+
+* **Spatial Memory Reconstruction** module integrating grid-cell metrics and BEV predictions
+* **Social Place Cell (SPC) module** for partner-location encoding
+* **Hierarchical RL policy (HRL-ICM)** for communication-efficient exploration
+* **Information Bottleneck (IB) compression pipeline** for predictive communication
+
+### TODO Status
+
+| Module                               | Status      |
+| ------------------------------------ | ----------- |
+| Grid-cell spatial metric scaffold    | ✅ Completed |
+| Predictive BEV reconstruction        | ✅ Completed |
+| Shared Spatial Memory reconstruction | ⬜ Pending   |
+| HRL-ICM hierarchical exploration     | ⬜ Pending   |
 
 ---
 
-## TODO Modules (Planned Releases)
+## Dataset Preparation
 
-The following modules are pending cleanup and integration.  They are listed here
-per the request so that the GitHub project documents future work clearly.
+### Grid-Cell Module
 
-- [ ] Spatial memory reconstruction
-- [ ] HRL-ICM -based maze policies
-- [ ] Information Bottleneck (IB) compression pipeline
+* Default: `grid_cell/data/self-navigation-maze-frame-only/`
+* Override via `GRID_DATA_ROOT`
+
+### BEV Module
+
+* Default: `bev_generation/data/`
+* Override via `BEV_DATA_ROOT`
+
+Each dataset directory should contain JSON metadata (`frame_info.json`, `env_config.json`)
+and image assets compatible with the dataset loaders.
 
 ---
 
 ## Reproducing Paper Results
 
-1. Prepare datasets according to the instructions above.
-2. Train the grid-cell module or use existing checkpoints.
-3. Run gridness analyses and generate the supplementary videos (Video 5 plus the
-   trajectory comparison) using the provided commands.
-4. Train or reuse BEV predictor weights, then render BEV videos via
-   `visualization_output.py`.
+1. Prepare datasets as above.
+2. Train the grid-cell module or use provided checkpoints.
+3. Run gridness analyses and reproduce training videos (Video 5, trajectory comparison).
+4. Train or reuse BEV predictor weights, then visualize spatial memory reconstruction results.
+
+---
+
+## Citation
+
+If you use this repository, please cite:
+
+```bibtex
+@misc{fang2025sharedspatialmemorypredictive,
+  title={Shared Spatial Memory Through Predictive Coding},
+  author={Zhengru Fang and Yu Guo and Jingjing Wang and Yuang Zhang and Haonan An and Yinhai Wang and Yuguang Fang},
+  year={2025},
+  eprint={2511.04235},
+  archivePrefix={arXiv},
+  primaryClass={cs.AI},
+  url={https://arxiv.org/abs/2511.04235},
+}
+```
